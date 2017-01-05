@@ -59,7 +59,7 @@ To add your own ViewControllers, your container ViewController must conform to t
     
 The container ViewController must also set itself as the dataSource delegate in **ViewDidLoad**:
 
-        override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         // Datasource to set our ViewControllers

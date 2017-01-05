@@ -72,7 +72,7 @@ public protocol PanelViewControllerDataSource {
     func PanelViewControllerDidScroll(offSet: CGFloat)
 }
 
-extension PanelViewControllerDataSource {
+public extension PanelViewControllerDataSource {
     
     func PanelViewControllerDidScroll(offSet: CGFloat) {
         // optional function
