@@ -20,7 +20,16 @@ class ViewController: PanelViewController, PanelViewControllerDataSource {
     var viewController1: UIViewController!
     var viewController2: CenterViewController!
     var viewController3: UIViewController!
-
+    
+    // Used to store property if statusBar is hidden or not
+    
+    var isStatusBarHidden = true
+    
+    override var prefersStatusBarHidden: Bool {
+        return isStatusBarHidden
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,6 +64,22 @@ class ViewController: PanelViewController, PanelViewControllerDataSource {
         let absoluteFloat = abs(offSet)
         
         viewController2.adjustButtonAlpha(float: absoluteFloat)
+        
+        // Determine if Panel is centered on Left or Right, and animate the status bar
+        
+        if (offSet == -1.0 || offSet == 1.0) && isStatusBarHidden == true {
+            isStatusBarHidden = false
+            
+            UIView.animate(withDuration: 0.35, animations: {
+                self.setNeedsStatusBarAppearanceUpdate()
+            })
+        } else /*Hide status bar */ {
+            isStatusBarHidden = true
+            
+            UIView.animate(withDuration: 0.35, animations: {
+                self.setNeedsStatusBarAppearanceUpdate()
+            })
+        }
     }
 }
 
