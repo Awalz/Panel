@@ -89,7 +89,7 @@ public protocol PanelViewControllerDelegate {
 // MARK: ViewController Declarations
 
 
-class PanelViewController: UIViewController {
+open class PanelViewController: UIViewController {
     
     // MARK: Public properties
     
@@ -104,7 +104,7 @@ class PanelViewController: UIViewController {
     fileprivate var _viewWidth              : CGFloat!
     fileprivate var _viewHight              : CGFloat!
 
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         // create height and width instance variables for reuse
@@ -118,7 +118,7 @@ class PanelViewController: UIViewController {
         view.addSubview(scrollView)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         //Checks if data source is set, and assigns View Controllers
@@ -130,11 +130,27 @@ class PanelViewController: UIViewController {
         addPanel(viewController: rightViewController, panel: .right)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // Set center panel as launch ViewController
         animateTo(panel: .center)
+    }
+    
+    public func animateTo(panel: Panel) {
+        
+        // Find x coordinate offset to animate to
+        
+        let xOffset: CGFloat!
+        switch panel {
+        case .left:
+            xOffset = 0.0
+        case .center:
+            xOffset = _viewWidth
+        case .right:
+            xOffset = _viewWidth * 2
+        }
+        scrollView.contentOffset = CGPoint(x: xOffset, y: 0)
     }
     
     private func setViewControllers() {
@@ -191,22 +207,6 @@ class PanelViewController: UIViewController {
         panelView.addSubview(panelViewController.view)
         addChildViewController(panelViewController)
     }
-    
-    fileprivate func animateTo(panel: Panel) {
-        
-        // Find x coordinate offset to animate to
-
-        let xOffset: CGFloat!
-        switch panel {
-        case .left:
-            xOffset = 0.0
-        case .center:
-            xOffset = _viewWidth
-        case .right:
-            xOffset = _viewWidth * 2
-        }
-        scrollView.contentOffset = CGPoint(x: xOffset, y: 0)
-    }
 }
 
 // MARK: ViewController Extension Declarations
@@ -214,7 +214,7 @@ class PanelViewController: UIViewController {
 
 extension PanelViewController: PanelViewControllerDelegate {
     
-    func PanelViewControllerAnimateTo(panel: Panel) {
+    public func PanelViewControllerAnimateTo(panel: Panel) {
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
             self.animateTo(panel: panel)
         }, completion: nil)
@@ -223,7 +223,7 @@ extension PanelViewController: PanelViewControllerDelegate {
 
 extension PanelViewController: UIScrollViewDelegate {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offSet = (scrollView.contentOffset.x / _viewWidth) - 1.0
         dataSource?.PanelViewControllerDidScroll(offSet: offSet)
     }
