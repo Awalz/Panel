@@ -17,13 +17,23 @@ import UIKit
 
 // MARK: Enum Declarations
 
+/// Position of Panel in array: [left, center, right]
+
 public enum Panel {
+    
+    /// Left Panel
     case left
+    
+    /// Center Panel
     case center
+    
+    /// Right Panel
     case right
 }
 
 // MARK: View Subclass Declarations
+
+/// ScrollView subclass container to hold Panels
 
 fileprivate class PanelScrollView: UIScrollView {
     
@@ -58,19 +68,28 @@ fileprivate class PanelScrollView: UIScrollView {
 
 // MARK: Protocol Declarations
 
+/// Public protocol for PanelViewController
+
 public protocol PanelViewControllerDataSource {
     
-    // Setting Panel View Controllers: [Left, Center, Right]
+    /**
+     Constructing PanelViewController.
+     
+     - returns: [UIViewController] corresponding to Panels [Left, Center, Right]
+     */
     
     func PanelViewDidSetViewControllers() -> [UIViewController]
     
-    // Offset is a float between -1.0 to 1.0 depending on the position of ScrollView. 
-    // -1.0 is centered on left panel
-    // 0.0 is centered on central panel
-    // 1.0 is centered on right panel
+    /**
+     PanelViewControllerDataSource function called when the PanelViewController Container scrolls.
+     
+     - Parameter offSet: CGFloat corresponding the to position of the PanelViewController ScrollView.
+     */
     
     func PanelViewControllerDidScroll(offSet: CGFloat)
 }
+
+/// Implementing optional delegate functions
 
 public extension PanelViewControllerDataSource {
     
@@ -79,19 +98,37 @@ public extension PanelViewControllerDataSource {
     }
 }
 
+/// Public protocol for PanViewController individual container ViewControllers
+
 public protocol PanelViewControllerDelegate {
     
-    // Allows individual Panel View Controllers to animate to another Panel
+    /**
+     Move to PanelViewController Panel with Animation.
+     
+     - Parameter panel: Panel to animate to.
+     */
     
     func PanelViewControllerAnimateTo(panel: Panel)
 }
 
+/// Implementing optional delegate functions
+
+public extension PanelViewControllerDelegate {
+    
+    func PanelViewControllerAnimateTo(panel: Panel) {
+        // optional function
+    }
+}
+
 // MARK: ViewController Declarations
 
+/// A ViewController subclass containing three child ViewControllers in a UIScrollView
 
 open class PanelViewController: UIViewController {
     
     // MARK: Public properties
+    
+    /// PanelViewController dataSource delegate
     
     public var dataSource                   : PanelViewControllerDataSource?
     
@@ -103,6 +140,8 @@ open class PanelViewController: UIViewController {
     fileprivate var rightViewController     : UIViewController?
     fileprivate var _viewWidth              : CGFloat!
     fileprivate var _viewHight              : CGFloat!
+    
+    /// ViewDidLoad implementation
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -118,6 +157,8 @@ open class PanelViewController: UIViewController {
         view.addSubview(scrollView)
     }
     
+    /// viewWillAppear implementation
+    
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -130,14 +171,23 @@ open class PanelViewController: UIViewController {
         addPanel(viewController: rightViewController, panel: .right)
     }
     
+    /// viewDidAppear implementation
+    
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // Set center panel as launch ViewController
-        animateTo(panel: .center)
+        moveTo(panel: .center)
     }
     
-    public func animateTo(panel: Panel) {
+    
+    /**
+     Move to PanelViewController Panel.
+     
+     - Parameter panel: Panel to move to.
+     */
+    
+    public func moveTo(panel: Panel) {
         
         // Find x coordinate offset to animate to
         
@@ -216,12 +266,14 @@ extension PanelViewController: PanelViewControllerDelegate {
     
     public func PanelViewControllerAnimateTo(panel: Panel) {
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
-            self.animateTo(panel: panel)
+            self.moveTo(panel: panel)
         }, completion: nil)
     }
 }
 
 extension PanelViewController: UIScrollViewDelegate {
+    
+    /// ScrollView delegate implementation
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offSet = (scrollView.contentOffset.x / _viewWidth) - 1.0

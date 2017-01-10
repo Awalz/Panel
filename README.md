@@ -43,84 +43,119 @@ Using Panel is very simple.
 
 If you have installed via Cocoapods, be sure to include 
 
-    import Panel
-    
-Create a View Controller, and set its subclass to be **PanelViewController**:
+```swift
+import Panel
+```
 
-    class MyViewController: PanelViewController {
-    ///
+    
+Create a View Controller, and set its subclass to be `PanelViewController`:
+
+```swift
+class MyViewController: PanelViewController {
+    ...
+    
+}
+```
+
+
+
+
     
 ### Adding View Controllers:
 
-To add your own ViewControllers, your container ViewController must conform to the **PanelViewControllerDataSource** protocol:
+To add your own ViewControllers, your container ViewController must conform to the `PanelViewControllerDataSource` protocol:
 
-    class MyViewController: PanelViewController, PanelViewControllerDataSource {
-    ///
+```swift
+class MyViewController: PanelViewController, PanelViewControllerDataSource {   
+    ...
     
-The container ViewController must also set itself as the dataSource delegate in **ViewDidLoad**:
+}
+```
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+The container ViewController must also set itself as the dataSource delegate in `ViewDidLoad`:
+
+```swift
+override func viewDidLoad() {
+    super.viewDidLoad()
         
-        // Datasource to set our ViewControllers
-        dataSource = self
-    }
+    // Datasource to set our ViewControllers
+    dataSource = self
+}
+```
     
-**PanelViewControllerDataSource** has one required protocol functions which must be implemented, **PanelViewDidSetViewControllers**. **PanelViewDidSetViewControllers** expects a return type of **[UIViewController]**. Panel requires three ViewControllers be returned in this array, in the order you wish to have them displayed:
+`PanelViewControllerDataSource` has one required protocol functions which must be implemented: `PanelViewDidSetViewControllers()`. `PanelViewDidSetViewControllers()` expects a return type of `[UIViewController]`. Panel requires three ViewControllers be returned in this array, in the order you wish to have them displayed:
 
-    func PanelViewDidSetViewControllers() -> [UIViewController] {
+```swift
+func PanelViewDidSetViewControllers() -> [UIViewController] {
     
-     // Add your own custom View Controllers here 
+  // Add your own custom View Controllers here 
      
-        viewController1 = UIViewController()
-        viewController2 = UIViewController()
-        viewController3 = UIViewController()
+  	viewController1 = UIViewController()
+    viewController2 = UIViewController()
+    viewController3 = UIViewController()
         
-        let panelArray = [viewController1, viewController2, viewController3]
+    let panelArray = [viewController1, viewController2, viewController3]
         
-        // Will be displayed in order: [LeftPanel, CenterPanel, RightPanel]
+    // Will be displayed in order: [LeftPanel, CenterPanel, RightPanel]
         
-        return panelArray
-    }
+    return panelArray
+}
+```
     
 ### Manually Moving to Panel
 
-If you wish to animate to particular panel from inside your container ViewController, you can use the **animateTo(panel:)** function:
+If you wish to animate to particular panel from inside your container ViewController, you can use the `animateTo(panel:)` function:
 
-    animateTo(panel: .left)
+```swift
+moveTo(panel: .left)
+```
  
- Additionally, if you wish to have one of the panel ViewControllers animate to another panel, you can use the **PanelViewControllerDelegate** property. 
+ Additionally, if you wish to have one of the panel ViewControllers animate to another panel, you can use the `PanelViewControllerDelegate` property. 
  
- Within the panel ViewController's decleration, add a delegate property of optional type **PanelViewControllerDelegate**:
+ Within the panel ViewController's decleration, add a delegate property of optional type `PanelViewControllerDelegate`:
  
-    var delegate: PanelViewControllerDelegate?
+```swift
+var delegate: PanelViewControllerDelegate?
+```
+ 
 
 When declaring the container ViewControllers dataSource, set the panel's delegate to the container ViewController:
 
-    func PanelViewDidSetViewControllers() -> [UIViewController] {
+```swift
+func PanelViewDidSetViewControllers() -> [UIViewController] {
      
-        viewController1 = CustomViewController()
+   viewController1 = CustomViewController()
      
-        // set the ViewController's delegate to the container ViewController
-        viewContoller1.delegate = self
-        ..
-    }
+   // set the ViewController's delegate to the 
+   // container ViewController
+   
+   viewContoller1.delegate = self
+        
+    ...
+}
+```
 
-Once the delegate is set, you can animate the panels by calling the delegate function **anelViewControllerAnimateTo(panel:)**:
+Once the delegate is set, you can animate the panels by calling the delegate function `PanelViewControllerAnimateTo(panel:)`:
 
-     delegate?.PanelViewControllerAnimateTo(panel: .left)
+```swift   
+delegate?.PanelViewControllerAnimateTo(panel: .left)
+```
 
 
 ### Miscellaneous
 
-If you wish to know the position of the container ScrollView as it scrolls, you can implement the optional **PanelViewControllerDataSource** function **PanelViewControllerDidScroll(offSet:)**. This will return the offSet CGFloat between -1.0 and 1.0:
+If you wish to know the position of the container ScrollView as it scrolls, you can implement the optional `PanelViewControllerDataSource` function `PanelViewControllerDidScroll(offSet:)`. This will return the offSet `CGFloat` between -1.0 and 1.0:
 
-     func PanelViewControllerDidScroll(offSet: CGFloat) {
-          // Offset is a float between -1.0 to 1.0 depending on the position of ScrollView. 
-          // -1.0 is centered on left panel
-          // 0.0 is centered on central panel
-          // 1.0 is centered on right panel
-       }
+```swift   
+func PanelViewControllerDidScroll(offSet: CGFloat) {
+     // Offset is a float between -1.0 to 1.0 
+     // depending on the position of ScrollView. 
+     // -1.0 is centered on left panel
+     // 0.0 is centered on central panel
+     // 1.0 is centered on right panel
+}
+```
 
 ### Contact
 
