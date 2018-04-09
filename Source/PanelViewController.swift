@@ -155,6 +155,8 @@ open class PanelViewController: UIViewController {
         scrollView.contentSize = CGSize(width: _viewWidth * 3, height: _viewHight)
         scrollView.delegate = self
         view.addSubview(scrollView)
+        
+        moveTo(panel: .center)
     }
     
     /// viewWillAppear implementation
@@ -170,16 +172,6 @@ open class PanelViewController: UIViewController {
         addPanel(viewController: centerViewController, panel: .center)
         addPanel(viewController: rightViewController, panel: .right)
     }
-    
-    /// viewDidAppear implementation
-    
-    override open func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // Set center panel as launch ViewController
-        moveTo(panel: .center)
-    }
-    
     
     /**
      Move to PanelViewController Panel.
